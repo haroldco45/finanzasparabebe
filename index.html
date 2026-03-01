@@ -3,93 +3,104 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Finanzas para Bebé - Suscripción Activa</title>
+    <title>Finanzas para Bebé - Vibras Positivas</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        .paywall { display: none; position: fixed; inset: 0; background: rgba(255,255,255,0.95); z-index: 100; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 20px; }
+        .paywall { display: none; position: fixed; inset: 0; background: rgba(255,255,255,0.98); z-index: 100; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 20px; }
         .paywall.active { display: flex; }
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
     </style>
 </head>
 <body class="bg-slate-50 min-h-screen p-4 font-sans">
 
     <div id="paywall" class="paywall">
         <div class="bg-white p-8 rounded-3xl shadow-2xl border-2 border-indigo-500 max-w-sm">
-            <span class="text-5xl">🔒</span>
-            <h2 class="text-2xl font-black text-gray-800 mt-4">SUBSCRIPCIÓN VENCIDA</h2>
-            <p class="text-gray-500 text-sm mt-2 font-medium text-pretty">Para seguir usando <b>Finanzas para Bebé</b> y las herramientas de <b>Vibras Positivas</b>, activa tu mes.</p>
-            <div class="my-6 p-4 bg-indigo-50 rounded-2xl">
-                <p class="text-[10px] uppercase font-bold text-indigo-400 tracking-widest">Valor Mensual</p>
-                <p class="text-3xl font-black text-indigo-700">1 DÓLAR</p>
+            <span class="text-6xl">🔒</span>
+            <h2 class="text-2xl font-black text-gray-800 mt-4 uppercase">Suscripción Vencida</h2>
+            <p class="text-gray-500 text-sm mt-2 font-medium">Para seguir usando <b>Finanzas para Bebé</b>, activa tu mensualidad con el equipo de <b>Vibras Positivas</b>.</p>
+            <div class="my-6 p-4 bg-indigo-50 rounded-2xl border border-indigo-100">
+                <p class="text-[10px] uppercase font-bold text-indigo-400 tracking-widest">Valor del Mes</p>
+                <p class="text-4xl font-black text-indigo-700">1 DÓLAR</p>
             </div>
-            <button onclick="contactarSoporte()" class="w-full bg-indigo-600 text-white py-4 rounded-2xl font-black hover:bg-indigo-700 transition shadow-lg uppercase tracking-tighter">Activar Ahora</button>
-            <p class="mt-4 text-[9px] text-gray-300 uppercase font-bold">Vibras Positivas © 2026</p>
+            <button onclick="contactarSoporte()" class="w-full bg-indigo-600 text-white py-4 rounded-2xl font-black hover:bg-indigo-700 transition shadow-lg uppercase tracking-tight">Activar Mi App</button>
+            <p class="mt-4 text-[9px] text-gray-300 uppercase font-bold">Vibras Positivas © 2026 • Derechos Reservados</p>
         </div>
     </div>
 
-    <div id="appContent" class="max-w-md mx-auto bg-white rounded-3xl shadow-2xl overflow-hidden p-6 border border-gray-100">
+    <div id="appContent" class="max-w-md mx-auto bg-white rounded-[2.5rem] shadow-2xl overflow-hidden p-6 border border-gray-100 transition-opacity duration-500">
         
-        <div class="text-center mb-4">
-            <h1 class="text-2xl font-black text-indigo-700 italic uppercase">👶 Finanzas para Bebé</h1>
-            <p class="text-[9px] text-gray-400 font-bold tracking-[0.2em] uppercase">Vibras Positivas • Suscripción Activa</p>
+        <div class="text-center mb-5">
+            <h1 class="text-2xl font-black text-indigo-700 italic uppercase tracking-tighter">👶 Finanzas para Bebé</h1>
+            <p class="text-[9px] text-gray-400 font-bold tracking-[0.3em] uppercase">Vibras Positivas • Control Diario</p>
         </div>
 
-        <div class="bg-gradient-to-br from-indigo-600 to-purple-700 p-6 rounded-2xl mb-4 text-white shadow-lg relative">
-            <p class="text-[10px] opacity-80 uppercase font-bold italic">Saldo Actual (Colombia)</p>
-            <p id="saldoActual" class="text-4xl font-black">$0</p>
-            <div id="fechaHora" class="absolute top-4 right-4 text-[9px] font-mono opacity-60 text-right"></div>
+        <div class="bg-gradient-to-br from-indigo-600 to-purple-700 p-7 rounded-3xl mb-5 text-white shadow-xl relative overflow-hidden">
+            <div class="absolute -right-4 -bottom-4 bg-white/10 w-24 h-24 rounded-full"></div>
+            <p class="text-[10px] opacity-80 uppercase font-black italic tracking-widest">Saldo Actual (COL)</p>
+            <p id="saldoActual" class="text-5xl font-black tracking-tighter mt-1">$0</p>
+            <div id="fechaHora" class="absolute top-4 right-5 text-[9px] font-mono opacity-70 text-right leading-tight"></div>
         </div>
 
-        <div id="setupSaldo" class="mb-6 p-4 bg-yellow-50 rounded-xl border border-yellow-200">
-            <p class="text-[10px] font-black text-yellow-700 mb-2 uppercase italic">💰 Paso 1: Saldo Inicial</p>
+        <div id="setupSaldo" class="mb-6 p-5 bg-amber-50 rounded-2xl border border-amber-100 shadow-sm">
+            <p class="text-[11px] font-black text-amber-700 mb-3 uppercase italic">💰 Paso 1: Define tu Saldo Inicial</p>
             <div class="flex gap-2">
-                <input type="number" id="saldoInput" placeholder="Ej: 500000" class="flex-1 p-3 bg-white border border-yellow-200 rounded-xl text-sm outline-none">
-                <button onclick="fijarSaldoInicial()" class="bg-yellow-500 text-white px-5 py-3 rounded-xl font-black text-xs shadow-sm">FIJAR</button>
+                <input type="number" id="saldoInput" placeholder="¿Cuánto tienes? (Ej: 500000)" class="flex-1 p-3 bg-white border border-amber-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-amber-400">
+                <button onclick="fijarSaldoInicial()" class="bg-amber-500 text-white px-5 py-3 rounded-xl font-black text-xs hover:bg-amber-600 transition shadow-md uppercase">Fijar</button>
             </div>
         </div>
 
         <div class="space-y-3 mb-6">
-            <input type="text" id="concepto" placeholder="¿En qué se fue la plata?" class="w-full p-3 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-indigo-400 outline-none text-sm font-medium">
-            <input type="number" id="monto" placeholder="Valor $" class="w-full p-3 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-indigo-400 outline-none text-sm font-medium">
+            <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Nuevo Movimiento:</p>
+            <input type="text" id="concepto" placeholder="¿En qué se gastó o entró?" class="w-full p-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-indigo-400 outline-none text-sm font-semibold">
+            <input type="number" id="monto" placeholder="Valor del movimiento $" class="w-full p-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-indigo-400 outline-none text-sm font-semibold">
             
-            <div class="flex gap-2 pt-2">
-                <button onclick="registrar('INGRESO')" class="flex-1 bg-green-500 text-white py-4 rounded-2xl font-black text-xs shadow-lg uppercase">➕ Ingreso</button>
-                <button onclick="registrar('EGRESO')" class="flex-1 bg-red-500 text-white py-4 rounded-2xl font-black text-xs shadow-lg uppercase">➖ Egreso</button>
+            <div class="flex gap-3 pt-2">
+                <button onclick="registrar('INGRESO')" class="flex-1 bg-emerald-500 text-white py-4 rounded-2xl font-black text-xs shadow-lg hover:bg-emerald-600 transition uppercase tracking-wider">➕ Ingreso</button>
+                <button onclick="registrar('EGRESO')" class="flex-1 bg-rose-500 text-white py-4 rounded-2xl font-black text-xs shadow-lg hover:bg-rose-600 transition uppercase tracking-wider">➖ Egreso</button>
             </div>
         </div>
 
-        <div class="flex justify-between items-center mb-3">
-            <h2 class="text-xs font-black text-gray-400 uppercase">Historial</h2>
-            <button onclick="enviarWhatsApp()" class="bg-emerald-100 text-emerald-700 px-4 py-2 rounded-full text-[10px] font-black uppercase">📲 Enviar Resumen</button>
+        <div class="flex justify-between items-center mb-4 px-1">
+            <h2 class="text-[11px] font-black text-gray-400 uppercase tracking-widest italic">Historial de hoy</h2>
+            <button onclick="enviarWhatsApp()" class="bg-emerald-50 text-emerald-600 px-4 py-2 rounded-xl text-[10px] font-black hover:bg-emerald-100 transition flex items-center gap-1 uppercase">
+                📲 Enviar Reporte
+            </button>
         </div>
         
-        <div id="listaMovimientos" class="space-y-2 max-h-48 overflow-y-auto mb-6"></div>
+        <div id="listaMovimientos" class="space-y-2 max-h-52 overflow-y-auto mb-6 px-1">
+            </div>
         
-        <div class="border-t pt-5 text-center">
-            <p class="text-[9px] text-gray-400 font-medium italic">© 2026 Vibras Positivas. Todos los derechos reservados.</p>
+        <div class="border-t border-gray-100 pt-6 text-center">
+            <button onclick="reiniciarApp()" class="group flex items-center justify-center gap-2 mx-auto text-[10px] text-rose-300 font-black uppercase tracking-widest hover:text-rose-500 transition mb-4">
+                🗑️ Borrar Todo y Reiniciar Día
+            </button>
+            <p class="text-[9px] text-gray-300 font-bold italic tracking-tighter">© 2026 VIBRAS POSITIVAS. TODOS LOS DERECHOS RESERVADOS.</p>
         </div>
     </div>
 
     <script>
         const WHATSAPP_SOPORTE = "573117700431";
         
-        // Cargar datos (Incluye fecha de instalación y estado de pago)
-        let storage = JSON.parse(localStorage.getItem('finanzas_bebe_v3')) || { 
+        // Persistencia de datos
+        let storage = JSON.parse(localStorage.getItem('finanzas_bebe_vfinal')) || { 
             saldoInicial: 0, 
             movimientos: [], 
             fechaInstalacion: new Date().getTime(),
             ultimaRenovacion: null 
         };
 
+        // --- SISTEMA DE SUSCRIPCIÓN ---
         function verificarSuscripcion() {
             const ahora = new Date().getTime();
             const diasDesdeInstalacion = (ahora - storage.fechaInstalacion) / (1000 * 60 * 60 * 24);
             
-            // Si pasaron 15 días y nunca ha renovado
+            // Bloqueo tras 15 días iniciales
             if (diasDesdeInstalacion > 15 && !storage.ultimaRenovacion) {
                 bloquear();
             }
             
-            // Si ya renovó, verificar que no hayan pasado 30 días desde la última vez
+            // Bloqueo tras 30 días de la última renovación
             if (storage.ultimaRenovacion) {
                 const diasDesdeRenovacion = (ahora - storage.ultimaRenovacion) / (1000 * 60 * 60 * 24);
                 if (diasDesdeRenovacion > 30) {
@@ -100,85 +111,16 @@
 
         function bloquear() {
             document.getElementById('paywall').classList.add('active');
-            document.getElementById('appContent').style.opacity = "0.1";
-            document.getElementById('appContent').style.pointerEvents = "none";
+            document.getElementById('appContent').classList.add('opacity-10', 'pointer-events-none');
         }
 
         function contactarSoporte() {
-            const msj = "Hola Vibras Positivas, deseo activar mi suscripción de 1 DÓLAR para la app Finanzas para Bebé.";
+            const msj = "Hola Vibras Positivas, quiero activar mi suscripción de 1 DÓLAR para la app Finanzas para Bebé.";
             window.open(`https://wa.me/${WHATSAPP_SOPORTE}?text=${encodeURIComponent(msj)}`, '_blank');
         }
 
-        // LÓGICA DE LA APP (IGUAL A LA ANTERIOR)
+        // --- LÓGICA FINANCIERA ---
         function actualizarReloj() {
             const ahora = new Date();
-            const opciones = { timeZone: 'America/Bogota', hour: '2-digit', minute: '2-digit', hour12: true };
-            document.getElementById('fechaHora').innerHTML = ahora.toLocaleDateString('es-CO') + '<br>' + ahora.toLocaleTimeString('es-CO', opciones);
-        }
-        setInterval(actualizarReloj, 1000);
-
-        function actualizarVista() {
-            const lista = document.getElementById('listaMovimientos');
-            const saldoElement = document.getElementById('saldoActual');
-            const setupDiv = document.getElementById('setupSaldo');
-            
-            if(storage.saldoInicial === 0 && storage.movimientos.length === 0) {
-                setupDiv.classList.remove('hidden');
-            } else {
-                setupDiv.classList.add('hidden');
-            }
-
-            lista.innerHTML = '';
-            let balanceActual = parseFloat(storage.saldoInicial);
-
-            if(storage.saldoInicial > 0) {
-                lista.innerHTML += `<div class="flex justify-between bg-indigo-50 p-3 rounded-xl border-l-4 border-indigo-400"><span class="text-xs font-black text-indigo-700 italic">Capital Inicial</span><span class="font-black text-indigo-700">$${storage.saldoInicial.toLocaleString()}</span></div>`;
-            }
-
-            storage.movimientos.forEach((m) => {
-                const esIngreso = m.tipo === 'INGRESO';
-                balanceActual = esIngreso ? balanceActual + m.monto : balanceActual - m.monto;
-                lista.innerHTML = `<div class="flex justify-between items-center bg-gray-50 p-3 rounded-xl border-l-4 ${esIngreso ? 'border-green-400' : 'border-red-400'}"><div><p class="text-xs font-bold text-gray-700">${m.concepto}</p><p class="text-[9px] text-gray-400 font-mono">${m.hora}</p></div><span class="font-black ${esIngreso ? 'text-green-600' : 'text-red-600'}">${esIngreso ? '+' : '-'}$${m.monto.toLocaleString()}</span></div>` + lista.innerHTML;
-            });
-
-            saldoElement.innerText = `$${balanceActual.toLocaleString()}`;
-            localStorage.setItem('finanzas_bebe_v3', JSON.stringify(storage));
-        }
-
-        function fijarSaldoInicial() {
-            const val = document.getElementById('saldoInput').value;
-            if(val && val > 0) { storage.saldoInicial = parseFloat(val); actualizarVista(); }
-        }
-
-        function registrar(tipo) {
-            const monto = document.getElementById('monto').value;
-            const concepto = document.getElementById('concepto').value;
-            const hora = new Date().toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit', hour12: true });
-            if(monto && concepto) {
-                storage.movimientos.push({ monto: parseFloat(monto), concepto: concepto.toUpperCase(), tipo, hora });
-                document.getElementById('monto').value = '';
-                document.getElementById('concepto').value = '';
-                actualizarVista();
-            }
-        }
-
-        function enviarWhatsApp() {
-            let balance = parseFloat(storage.saldoInicial);
-            let detalle = "📊 *REPORTE VIBRAS POSITIVAS*%0A%0A";
-            detalle += `💰 *INICIO:* $${storage.saldoInicial.toLocaleString()}%0A`;
-            storage.movimientos.forEach(m => {
-                const esIngreso = m.tipo === 'INGRESO';
-                balance = esIngreso ? balance + m.monto : balance - m.monto;
-                detalle += `${esIngreso ? '✅' : '🔻'} ${m.hora} | ${m.concepto}: *$${m.monto.toLocaleString()}*%0A`;
-            });
-            detalle += `%0A💵 *FINAL: $${balance.toLocaleString()}*`;
-            window.open(`https://wa.me/${WHATSAPP_SOPORTE}?text=${detalle}`, '_blank');
-        }
-
-        // Ejecutar al cargar
-        verificarSuscripcion();
-        actualizarReloj();
-        actualizarVista();
-    </script>
-</body>
-</html>
+            const opciones = { timeZone: 'America/Bogota', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true };
+            document.getElementById('fechaHora').innerHTML = ahora.toLocaleDateString('es-CO') + '<br

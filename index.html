@@ -3,73 +3,124 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Finanzas para Bebé</title>
+    <title>Finanzas para Bebé - Control Total</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100 min-h-screen p-4">
-    <div class="max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden p-6">
-        <h1 class="text-2xl font-bold text-center text-blue-600 mb-6">👶 FINANZAS PARA BEBÉ</h1>
+<body class="bg-slate-100 min-h-screen p-4 font-sans">
+    <div class="max-w-md mx-auto bg-white rounded-2xl shadow-xl overflow-hidden p-6 border border-gray-200">
+        <h1 class="text-2xl font-black text-center text-indigo-600 mb-2 italic">👶 FINANZAS PARA BEBÉ</h1>
+        <p class="text-center text-gray-400 text-xs mb-6 uppercase tracking-widest font-bold">Control de Ingresos y Egresos</p>
         
-        <div class="bg-blue-50 p-4 rounded-lg mb-6 text-center">
-            <p class="text-sm text-gray-500 uppercase">Gasto Total Hoy</p>
-            <p id="totalGasto" class="text-3xl font-black text-blue-700">$0</p>
+        <div class="bg-indigo-600 p-6 rounded-xl mb-6 text-center text-white shadow-lg">
+            <p class="text-xs opacity-80 uppercase font-bold">Tu Saldo Disponible</p>
+            <p id="saldoActual" class="text-4xl font-black">$0</p>
         </div>
 
-        <div class="space-y-4">
-            <input type="number" id="monto" placeholder="¿Cuánto? (Ej: 5000)" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400">
-            <input type="text" id="concepto" placeholder="¿En qué? (Ej: Café)" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400">
-            <button onclick="agregarGasto()" class="w-full bg-blue-600 text-white py-3 rounded-lg font-bold hover:bg-blue-700 transition">REGISTRAR GASTO</button>
+        <div id="setupSaldo" class="mb-6 p-4 bg-yellow-50 rounded-lg border border-yellow-200">
+            <p class="text-xs font-bold text-yellow-700 mb-2">💰 CONFIGURAR SALDO INICIAL:</p>
+            <div class="flex gap-2">
+                <input type="number" id="saldoInput" placeholder="Ej: 500000" class="flex-1 p-2 border rounded text-sm focus:ring-2 focus:ring-yellow-400 outline-none">
+                <button onclick="setSaldoInicial()" class="bg-yellow-500 text-white px-4 py-2 rounded font-bold text-xs hover:bg-yellow-600 transition">FIJAR</button>
+            </div>
         </div>
 
-        <hr class="my-6">
+        <div class="space-y-3">
+            <input type="text" id="concepto" placeholder="¿Qué pasó? (Ej: Pago nómina, Almuerzo)" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-indigo-400 outline-none text-sm">
+            <input type="number" id="monto" placeholder="¿Cuánto? (Ej: 10000)" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-indigo-400 outline-none text-sm">
+            
+            <div class="flex gap-2">
+                <button onclick="registrar('INGRESO')" class="flex-1 bg-green-500 text-white py-3 rounded-lg font-black text-xs hover:bg-green-600 transition shadow-md">➕ INGRESO</button>
+                <button onclick="registrar('EGRESO')" class="flex-1 bg-red-500 text-white py-3 rounded-lg font-black text-xs hover:bg-red-600 transition shadow-md">➖ EGRESO</button>
+            </div>
+        </div>
 
-        <div id="listaGastos" class="space-y-2">
+        <hr class="my-6 border-gray-100">
+
+        <h2 class="text-xs font-black text-gray-400 uppercase mb-4 tracking-tighter">Movimientos del Día</h2>
+        <div id="listaMovimientos" class="space-y-2 max-h-60 overflow-y-auto pr-1">
             </div>
         
-        <button onclick="limpiarTodo()" class="mt-6 w-full text-xs text-red-400 underline">Borrar historial de hoy</button>
+        <div class="mt-8 flex justify-between items-center opacity-40 hover:opacity-100 transition">
+            <button onclick="reiniciarApp()" class="text-[10px] text-red-500 font-bold underline uppercase">Borrar todo y reiniciar</button>
+            <span class="text-[10px] text-gray-400 font-mono">v1.1 - GitHub Pages</span>
+        </div>
     </div>
 
     <script>
-        let gastos = JSON.parse(localStorage.getItem('gastos_bebe')) || [];
+        let datos = JSON.parse(localStorage.getItem('finanzas_bebe_v1')) || { saldoBase: 0, movimientos: [] };
 
         function actualizarVista() {
-            const lista = document.getElementById('listaGastos');
-            const totalElement = document.getElementById('totalGasto');
-            lista.innerHTML = '';
-            let total = 0;
+            const lista = document.getElementById('listaMovimientos');
+            const saldoElement = document.getElementById('saldoActual');
+            const setupDiv = document.getElementById('setupSaldo');
+            
+            // Ocultar setup si ya hay saldo base
+            if(datos.saldoBase > 0 || datos.movimientos.length > 0) {
+                setupDiv.classList.add('hidden');
+            } else {
+                setupDiv.classList.remove('hidden');
+            }
 
-            gastos.forEach((g, index) => {
-                total += parseFloat(g.monto);
+            lista.innerHTML = '';
+            let balance = parseFloat(datos.saldoBase);
+
+            // Renderizar movimientos (el más reciente arriba)
+            [...datos.movimientos].reverse().forEach((m) => {
+                const esIngreso = m.tipo === 'INGRESO';
+                balance = esIngreso ? balance + m.monto : balance - m.monto;
+                
                 lista.innerHTML += `
-                    <div class="flex justify-between bg-gray-50 p-3 rounded border-l-4 border-blue-500">
-                        <span>${g.concepto}</span>
-                        <span class="font-bold">$${g.monto}</span>
+                    <div class="flex justify-between items-center bg-gray-50 p-3 rounded-lg border-l-4 ${esIngreso ? 'border-green-500' : 'border-red-500'}">
+                        <div class="flex flex-col">
+                            <span class="text-sm font-bold text-gray-700">${m.concepto}</span>
+                            <span class="text-[10px] text-gray-400 uppercase font-mono">${m.fecha}</span>
+                        </div>
+                        <span class="font-black ${esIngreso ? 'text-green-600' : 'text-red-600'}">
+                            ${esIngreso ? '+' : '-'}$${m.monto.toLocaleString()}
+                        </span>
                     </div>`;
             });
 
-            totalElement.innerText = `$${total.toLocaleString()}`;
-            localStorage.setItem('gastos_bebe', JSON.stringify(gastos));
+            saldoElement.innerText = `$${balance.toLocaleString()}`;
+            localStorage.setItem('finanzas_bebe_v1', JSON.stringify(datos));
         }
 
-        function agregarGasto() {
+        function setSaldoInicial() {
+            const input = document.getElementById('saldoInput');
+            if(input.value) {
+                datos.saldoBase = parseFloat(input.value);
+                actualizarVista();
+            }
+        }
+
+        function registrar(tipo) {
             const monto = document.getElementById('monto').value;
             const concepto = document.getElementById('concepto').value;
-            
+            const fecha = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
             if(monto && concepto) {
-                gastos.push({ monto, concepto });
+                datos.movimientos.push({ 
+                    monto: parseFloat(monto), 
+                    concepto: concepto.toUpperCase(), 
+                    tipo: tipo,
+                    fecha: fecha
+                });
                 document.getElementById('monto').value = '';
                 document.getElementById('concepto').value = '';
                 actualizarVista();
+            } else {
+                alert("Por favor llena cuánto y en qué.");
             }
         }
 
-        function limpiarTodo() {
-            if(confirm('¿Quieres borrar los gastos de hoy?')) {
-                gastos = [];
+        function reiniciarApp() {
+            if(confirm('¿Seguro? Se borrará el saldo inicial y todos los movimientos.')) {
+                datos = { saldoBase: 0, movimientos: [] };
                 actualizarVista();
             }
         }
 
+        // Iniciar al cargar
         actualizarVista();
     </script>
 </body>

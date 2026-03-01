@@ -6,50 +6,62 @@
     <title>Finanzas para Bebé - Vibras Positivas</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-50 min-h-screen p-4 font-sans">
+<body class="bg-slate-50 min-h-screen p-4 font-sans">
     <div class="max-w-md mx-auto bg-white rounded-3xl shadow-2xl overflow-hidden p-6 border border-gray-100">
         
-        <div class="text-center mb-6">
+        <div class="text-center mb-4">
             <h1 class="text-2xl font-black text-indigo-700 italic">👶 FINANZAS PARA BEBÉ</h1>
             <p class="text-[10px] text-gray-400 font-bold tracking-[0.2em] uppercase">Desarrollado por Vibras Positivas ©</p>
         </div>
 
-        <div class="bg-gradient-to-br from-indigo-600 to-purple-700 p-6 rounded-2xl mb-6 text-white shadow-lg relative">
-            <p class="text-[10px] opacity-80 uppercase font-bold tracking-wider">Saldo Disponible (COL)</p>
+        <div class="bg-gradient-to-br from-indigo-600 to-purple-700 p-6 rounded-2xl mb-4 text-white shadow-lg relative">
+            <p class="text-[10px] opacity-80 uppercase font-bold tracking-wider italic">Saldo Actual (Colombia)</p>
             <p id="saldoActual" class="text-4xl font-black tracking-tight">$0</p>
             <div id="fechaHora" class="absolute top-4 right-4 text-[9px] font-mono opacity-60 text-right"></div>
         </div>
 
-        <div class="space-y-3 mb-6">
-            <input type="text" id="concepto" placeholder="Concepto (Ej: Venta Arroz)" class="w-full p-3 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-indigo-400 outline-none text-sm">
-            <input type="number" id="monto" placeholder="Valor $" class="w-full p-3 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-indigo-400 outline-none text-sm">
-            
+        <div id="setupSaldo" class="mb-6 p-4 bg-yellow-50 rounded-xl border border-yellow-200">
+            <p class="text-[10px] font-black text-yellow-700 mb-2 uppercase tracking-tighter italic">💰 Paso 1: Ingresa tu saldo inicial</p>
             <div class="flex gap-2">
-                <button onclick="registrar('INGRESO')" class="flex-1 bg-green-500 text-white py-3 rounded-xl font-bold text-xs hover:bg-green-600 transition shadow-md">➕ INGRESO</button>
-                <button onclick="registrar('EGRESO')" class="flex-1 bg-red-500 text-white py-3 rounded-xl font-bold text-xs hover:bg-red-600 transition shadow-md">➖ EGRESO</button>
+                <input type="number" id="saldoInput" placeholder="Ej: 500000" class="flex-1 p-3 bg-white border border-yellow-200 rounded-xl text-sm focus:ring-2 focus:ring-yellow-400 outline-none">
+                <button onclick="fijarSaldoInicial()" class="bg-yellow-500 text-white px-5 py-3 rounded-xl font-black text-xs hover:bg-yellow-600 transition shadow-sm">FIJAR</button>
             </div>
         </div>
 
-        <div class="flex justify-between items-center mb-3">
-            <h2 class="text-xs font-black text-gray-400 uppercase tracking-tighter">Movimientos de hoy</h2>
-            <button onclick="enviarWhatsApp()" class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-[10px] font-bold hover:bg-green-200 transition">📲 ENVIAR REPORTE</button>
+        <div class="space-y-3 mb-6">
+            <p class="text-[10px] font-black text-gray-400 uppercase tracking-tighter">Registrar Movimiento:</p>
+            <input type="text" id="concepto" placeholder="¿En qué se fue la plata?" class="w-full p-3 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-indigo-400 outline-none text-sm font-medium">
+            <input type="number" id="monto" placeholder="Valor $" class="w-full p-3 bg-gray-50 border-none rounded-xl focus:ring-2 focus:ring-indigo-400 outline-none text-sm font-medium">
+            
+            <div class="flex gap-2 pt-2">
+                <button onclick="registrar('INGRESO')" class="flex-1 bg-green-500 text-white py-4 rounded-2xl font-black text-xs hover:bg-green-600 transition shadow-lg uppercase">➕ Ingreso</button>
+                <button onclick="registrar('EGRESO')" class="flex-1 bg-red-500 text-white py-4 rounded-2xl font-black text-xs hover:bg-red-600 transition shadow-lg uppercase">➖ Egreso</button>
+            </div>
+        </div>
+
+        <div class="flex justify-between items-center mb-3 px-1">
+            <h2 class="text-xs font-black text-gray-400 uppercase">Historial hoy</h2>
+            <button onclick="enviarWhatsApp()" class="bg-emerald-100 text-emerald-700 px-4 py-2 rounded-full text-[10px] font-black hover:bg-emerald-200 transition flex items-center gap-1 uppercase tracking-tighter">
+                📲 Enviar Resumen
+            </button>
         </div>
         
-        <div id="listaMovimientos" class="space-y-2 max-h-52 overflow-y-auto mb-6"></div>
+        <div id="listaMovimientos" class="space-y-2 max-h-48 overflow-y-auto mb-6 px-1"></div>
         
-        <div class="border-t pt-4 text-center">
-            <p class="text-[10px] text-gray-400 italic">© 2026 Vibras Positivas. Todos los derechos reservados.</p>
-            <button onclick="reiniciarApp()" class="mt-2 text-[9px] text-red-300 hover:text-red-500 underline uppercase tracking-widest">Reiniciar base de datos</button>
+        <div class="border-t pt-5 text-center">
+            <p class="text-[9px] text-gray-400 font-medium italic">© 2026 Vibras Positivas. Todos los derechos reservados.</p>
+            <button onclick="reiniciarApp()" class="mt-3 text-[9px] text-red-300 hover:text-red-500 underline uppercase font-bold">Borrar historial y saldo</button>
         </div>
     </div>
 
     <script>
-        let datos = JSON.parse(localStorage.getItem('finanzas_bebe_v2')) || { movimientos: [] };
+        // Estructura de datos: saldoInicial y movimientos
+        let datos = JSON.parse(localStorage.getItem('finanzas_bebe_pro')) || { saldoInicial: 0, movimientos: [] };
         const WHATSAPP_DESTINO = "573117700431";
 
         function actualizarReloj() {
             const ahora = new Date();
-            const opciones = { timeZone: 'America/Bogota', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true };
+            const opciones = { timeZone: 'America/Bogota', hour: '2-digit', minute: '2-digit', hour12: true };
             document.getElementById('fechaHora').innerHTML = ahora.toLocaleDateString('es-CO') + '<br>' + ahora.toLocaleTimeString('es-CO', opciones);
         }
         setInterval(actualizarReloj, 1000);
@@ -57,24 +69,56 @@
         function actualizarVista() {
             const lista = document.getElementById('listaMovimientos');
             const saldoElement = document.getElementById('saldoActual');
-            lista.innerHTML = '';
-            let balance = 0;
+            const setupDiv = document.getElementById('setupSaldo');
+            
+            // Si el saldo inicial es 0 y no hay movimientos, mostramos el paso 1
+            if(datos.saldoInicial === 0 && datos.movimientos.length === 0) {
+                setupDiv.classList.remove('hidden');
+            } else {
+                setupDiv.classList.add('hidden');
+            }
 
-            [...datos.movimientos].reverse().forEach((m) => {
-                const esIngreso = m.tipo === 'INGRESO';
-                balance = esIngreso ? balance + m.monto : balance - m.monto;
+            lista.innerHTML = '';
+            let balanceActual = parseFloat(datos.saldoInicial);
+
+            // Mostrar el Saldo Inicial como el primer movimiento
+            if(datos.saldoInicial > 0) {
                 lista.innerHTML += `
+                    <div class="flex justify-between items-center bg-indigo-50 p-3 rounded-xl border-l-4 border-indigo-400">
+                        <span class="text-xs font-black text-indigo-700 uppercase italic">Capital Inicial</span>
+                        <span class="font-black text-indigo-700">$${datos.saldoInicial.toLocaleString()}</span>
+                    </div>`;
+            }
+
+            // Procesar ingresos y egresos
+            datos.movimientos.forEach((m) => {
+                const esIngreso = m.tipo === 'INGRESO';
+                balanceActual = esIngreso ? balanceActual + m.monto : balanceActual - m.monto;
+                
+                lista.innerHTML = `
                     <div class="flex justify-between items-center bg-gray-50 p-3 rounded-xl border-l-4 ${esIngreso ? 'border-green-400' : 'border-red-400'}">
                         <div>
-                            <p class="text-sm font-bold text-gray-700 leading-tight">${m.concepto}</p>
+                            <p class="text-xs font-bold text-gray-700 leading-tight">${m.concepto}</p>
                             <p class="text-[9px] text-gray-400 font-mono">${m.hora}</p>
                         </div>
-                        <span class="font-black ${esIngreso ? 'text-green-600' : 'text-red-600'}">${esIngreso ? '+' : '-'}$${m.monto.toLocaleString()}</span>
-                    </div>`;
+                        <span class="font-black ${esIngreso ? 'text-green-600' : 'text-red-600'}">
+                            ${esIngreso ? '+' : '-'}$${m.monto.toLocaleString()}
+                        </span>
+                    </div>` + lista.innerHTML; // Lo más nuevo arriba
             });
 
-            saldoElement.innerText = `$${balance.toLocaleString()}`;
-            localStorage.setItem('finanzas_bebe_v2', JSON.stringify(datos));
+            saldoElement.innerText = `$${balanceActual.toLocaleString()}`;
+            localStorage.setItem('finanzas_bebe_pro', JSON.stringify(datos));
+        }
+
+        function fijarSaldoInicial() {
+            const val = document.getElementById('saldoInput').value;
+            if(val && val > 0) {
+                datos.saldoInicial = parseFloat(val);
+                actualizarVista();
+            } else {
+                alert("Ingresa un monto válido para arrancar.");
+            }
         }
 
         function registrar(tipo) {
@@ -83,31 +127,43 @@
             const hora = new Date().toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit', hour12: true });
 
             if(monto && concepto) {
-                datos.movimientos.push({ monto: parseFloat(monto), concepto: concepto.toUpperCase(), tipo, hora });
+                datos.movimientos.push({ 
+                    monto: parseFloat(monto), 
+                    concepto: concepto.toUpperCase(), 
+                    tipo: tipo, 
+                    hora: hora 
+                });
                 document.getElementById('monto').value = '';
                 document.getElementById('concepto').value = '';
                 actualizarVista();
+            } else {
+                alert("Completa el monto y el concepto.");
             }
         }
 
         function enviarWhatsApp() {
-            let balance = 0;
-            let detalle = "📊 *REPORTE DIARIO - FINANZAS PARA BEBÉ*%0A";
-            detalle += "✨ _Por: Vibras Positivas_%0A%0A";
+            let balance = parseFloat(datos.saldoInicial);
+            let detalle = "📊 *RESUMEN DIARIO - FINANZAS PARA BEBÉ*%0A";
+            detalle += "✨ _Marca: Vibras Positivas_%0A%0A";
             
+            detalle += `💰 *SALDO INICIAL:* $${datos.saldoInicial.toLocaleString()}%0A`;
+            detalle += "──────────────────%0A";
+
             datos.movimientos.forEach(m => {
                 const esIngreso = m.tipo === 'INGRESO';
                 balance = esIngreso ? balance + m.monto : balance - m.monto;
-                detalle += `${esIngreso ? '✅' : '🔻'} ${m.hora} - ${m.concepto}: *$${m.monto.toLocaleString()}*%0A`;
+                detalle += `${esIngreso ? '✅' : '🔻'} ${m.hora} | ${m.concepto}: *$${m.monto.toLocaleString()}*%0A`;
             });
 
-            detalle += `%0A💰 *SALDO FINAL: $${balance.toLocaleString()}*`;
+            detalle += "──────────────────%0A";
+            detalle += `💵 *SALDO FINAL: $${balance.toLocaleString()}*`;
+            
             window.open(`https://wa.me/${WHATSAPP_DESTINO}?text=${detalle}`, '_blank');
         }
 
         function reiniciarApp() {
-            if(confirm('¿Borrar todo?')) {
-                datos = { movimientos: [] };
+            if(confirm('¿Deseas borrar todo el registro y el saldo inicial?')) {
+                datos = { saldoInicial: 0, movimientos: [] };
                 actualizarVista();
             }
         }

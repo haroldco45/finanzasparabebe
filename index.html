@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finanzas para Bebé</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen p-4">
+    <div class="max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden p-6">
+        <h1 class="text-2xl font-bold text-center text-blue-600 mb-6">👶 FINANZAS PARA BEBÉ</h1>
+        
+        <div class="bg-blue-50 p-4 rounded-lg mb-6 text-center">
+            <p class="text-sm text-gray-500 uppercase">Gasto Total Hoy</p>
+            <p id="totalGasto" class="text-3xl font-black text-blue-700">$0</p>
+        </div>
+
+        <div class="space-y-4">
+            <input type="number" id="monto" placeholder="¿Cuánto? (Ej: 5000)" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400">
+            <input type="text" id="concepto" placeholder="¿En qué? (Ej: Café)" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400">
+            <button onclick="agregarGasto()" class="w-full bg-blue-600 text-white py-3 rounded-lg font-bold hover:bg-blue-700 transition">REGISTRAR GASTO</button>
+        </div>
+
+        <hr class="my-6">
+
+        <div id="listaGastos" class="space-y-2">
+            </div>
+        
+        <button onclick="limpiarTodo()" class="mt-6 w-full text-xs text-red-400 underline">Borrar historial de hoy</button>
+    </div>
+
+    <script>
+        let gastos = JSON.parse(localStorage.getItem('gastos_bebe')) || [];
+
+        function actualizarVista() {
+            const lista = document.getElementById('listaGastos');
+            const totalElement = document.getElementById('totalGasto');
+            lista.innerHTML = '';
+            let total = 0;
+
+            gastos.forEach((g, index) => {
+                total += parseFloat(g.monto);
+                lista.innerHTML += `
+                    <div class="flex justify-between bg-gray-50 p-3 rounded border-l-4 border-blue-500">
+                        <span>${g.concepto}</span>
+                        <span class="font-bold">$${g.monto}</span>
+                    </div>`;
+            });
+
+            totalElement.innerText = `$${total.toLocaleString()}`;
+            localStorage.setItem('gastos_bebe', JSON.stringify(gastos));
+        }
+
+        function agregarGasto() {
+            const monto = document.getElementById('monto').value;
+            const concepto = document.getElementById('concepto').value;
+            
+            if(monto && concepto) {
+                gastos.push({ monto, concepto });
+                document.getElementById('monto').value = '';
+                document.getElementById('concepto').value = '';
+                actualizarVista();
+            }
+        }
+
+        function limpiarTodo() {
+            if(confirm('¿Quieres borrar los gastos de hoy?')) {
+                gastos = [];
+                actualizarVista();
+            }
+        }
+
+        actualizarVista();
+    </script>
+</body>
+</html>

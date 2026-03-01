@@ -8,8 +8,6 @@
     <style>
         .paywall { display: none; position: fixed; inset: 0; background: rgba(255,255,255,0.98); z-index: 100; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 20px; }
         .paywall.active { display: flex; }
-        ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
     </style>
 </head>
 <body class="bg-slate-50 min-h-screen p-4 font-sans">
@@ -18,109 +16,151 @@
         <div class="bg-white p-8 rounded-3xl shadow-2xl border-2 border-indigo-500 max-w-sm">
             <span class="text-6xl">🔒</span>
             <h2 class="text-2xl font-black text-gray-800 mt-4 uppercase">Suscripción Vencida</h2>
-            <p class="text-gray-500 text-sm mt-2 font-medium">Para seguir usando <b>Finanzas para Bebé</b>, activa tu mensualidad con el equipo de <b>Vibras Positivas</b>.</p>
-            <div class="my-6 p-4 bg-indigo-50 rounded-2xl border border-indigo-100">
-                <p class="text-[10px] uppercase font-bold text-indigo-400 tracking-widest">Valor del Mes</p>
-                <p class="text-4xl font-black text-indigo-700">1 DÓLAR</p>
-            </div>
-            <button onclick="contactarSoporte()" class="w-full bg-indigo-600 text-white py-4 rounded-2xl font-black hover:bg-indigo-700 transition shadow-lg uppercase tracking-tight">Activar Mi App</button>
-            <p class="mt-4 text-[9px] text-gray-300 uppercase font-bold">Vibras Positivas © 2026 • Derechos Reservados</p>
+            <p class="text-gray-500 text-sm mt-2">Activa tu mes por <b>1 DÓLAR</b> con <b>Vibras Positivas</b>.</p>
+            <button onclick="contactarSoporte()" class="w-full mt-6 bg-indigo-600 text-white py-4 rounded-2xl font-black uppercase">Activar Ahora</button>
         </div>
     </div>
 
-    <div id="appContent" class="max-w-md mx-auto bg-white rounded-[2.5rem] shadow-2xl overflow-hidden p-6 border border-gray-100 transition-opacity duration-500">
+    <div id="appContent" class="max-w-md mx-auto bg-white rounded-[2.5rem] shadow-2xl p-6 border border-gray-100">
         
         <div class="text-center mb-5">
-            <h1 class="text-2xl font-black text-indigo-700 italic uppercase tracking-tighter">👶 Finanzas para Bebé</h1>
-            <p class="text-[9px] text-gray-400 font-bold tracking-[0.3em] uppercase">Vibras Positivas • Control Diario</p>
+            <h1 class="text-2xl font-black text-indigo-700 italic uppercase">👶 Finanzas para Bebé</h1>
+            <p class="text-[9px] text-gray-400 font-bold tracking-[0.3em] uppercase">Vibras Positivas © 2026</p>
         </div>
 
-        <div class="bg-gradient-to-br from-indigo-600 to-purple-700 p-7 rounded-3xl mb-5 text-white shadow-xl relative overflow-hidden">
-            <div class="absolute -right-4 -bottom-4 bg-white/10 w-24 h-24 rounded-full"></div>
-            <p class="text-[10px] opacity-80 uppercase font-black italic tracking-widest">Saldo Actual (COL)</p>
+        <div class="bg-gradient-to-br from-indigo-600 to-purple-700 p-7 rounded-3xl mb-5 text-white shadow-xl relative">
+            <p class="text-[10px] opacity-80 uppercase font-black italic">Saldo Disponible (COL)</p>
             <p id="saldoActual" class="text-5xl font-black tracking-tighter mt-1">$0</p>
-            <div id="fechaHora" class="absolute top-4 right-5 text-[9px] font-mono opacity-70 text-right leading-tight"></div>
+            <div id="fechaHora" class="absolute top-4 right-5 text-[9px] font-mono opacity-70 text-right"></div>
         </div>
 
-        <div id="setupSaldo" class="mb-6 p-5 bg-amber-50 rounded-2xl border border-amber-100 shadow-sm">
-            <p class="text-[11px] font-black text-amber-700 mb-3 uppercase italic">💰 Paso 1: Define tu Saldo Inicial</p>
+        <div id="setupSaldo" class="mb-6 p-5 bg-amber-50 rounded-2xl border border-amber-100">
+            <p class="text-[11px] font-black text-amber-700 mb-3 uppercase italic">💰 Paso 1: Saldo Inicial</p>
             <div class="flex gap-2">
-                <input type="number" id="saldoInput" placeholder="¿Cuánto tienes? (Ej: 500000)" class="flex-1 p-3 bg-white border border-amber-200 rounded-xl text-sm outline-none focus:ring-2 focus:ring-amber-400">
-                <button onclick="fijarSaldoInicial()" class="bg-amber-500 text-white px-5 py-3 rounded-xl font-black text-xs hover:bg-amber-600 transition shadow-md uppercase">Fijar</button>
+                <input type="number" id="saldoInput" placeholder="¿Cuánto tienes hoy?" class="flex-1 p-3 rounded-xl border-none outline-none text-sm">
+                <button onclick="fijarSaldoInicial()" class="bg-amber-500 text-white px-5 py-3 rounded-xl font-black text-xs uppercase">Fijar</button>
             </div>
         </div>
 
         <div class="space-y-3 mb-6">
-            <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Nuevo Movimiento:</p>
-            <input type="text" id="concepto" placeholder="¿En qué se gastó o entró?" class="w-full p-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-indigo-400 outline-none text-sm font-semibold">
-            <input type="number" id="monto" placeholder="Valor del movimiento $" class="w-full p-4 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-indigo-400 outline-none text-sm font-semibold">
+            <input type="text" id="concepto" placeholder="Concepto (Ej: Venta Arroz)" class="w-full p-4 bg-gray-50 rounded-2xl outline-none text-sm font-semibold">
+            <input type="number" id="monto" placeholder="Valor $" class="w-full p-4 bg-gray-50 rounded-2xl outline-none text-sm font-semibold">
             
-            <div class="flex gap-3 pt-2">
-                <button onclick="registrar('INGRESO')" class="flex-1 bg-emerald-500 text-white py-4 rounded-2xl font-black text-xs shadow-lg hover:bg-emerald-600 transition uppercase tracking-wider">➕ Ingreso</button>
-                <button onclick="registrar('EGRESO')" class="flex-1 bg-rose-500 text-white py-4 rounded-2xl font-black text-xs shadow-lg hover:bg-rose-600 transition uppercase tracking-wider">➖ Egreso</button>
+            <div class="flex gap-3">
+                <button onclick="registrar('INGRESO')" class="flex-1 bg-emerald-500 text-white py-4 rounded-2xl font-black text-xs shadow-lg uppercase">➕ Ingreso</button>
+                <button onclick="registrar('EGRESO')" class="flex-1 bg-rose-500 text-white py-4 rounded-2xl font-black text-xs shadow-lg uppercase">➖ Egreso</button>
             </div>
         </div>
 
-        <div class="flex justify-between items-center mb-4 px-1">
-            <h2 class="text-[11px] font-black text-gray-400 uppercase tracking-widest italic">Historial de hoy</h2>
-            <button onclick="enviarWhatsApp()" class="bg-emerald-50 text-emerald-600 px-4 py-2 rounded-xl text-[10px] font-black hover:bg-emerald-100 transition flex items-center gap-1 uppercase">
-                📲 Enviar Reporte
-            </button>
+        <div class="flex justify-between items-center mb-4">
+            <h2 class="text-[11px] font-black text-gray-400 uppercase tracking-widest">Movimientos</h2>
+            <button onclick="enviarWhatsApp()" class="text-emerald-600 text-[10px] font-black uppercase">📲 Enviar Reporte</button>
         </div>
         
-        <div id="listaMovimientos" class="space-y-2 max-h-52 overflow-y-auto mb-6 px-1">
-            </div>
+        <div id="listaMovimientos" class="space-y-2 max-h-52 overflow-y-auto mb-6"></div>
         
-        <div class="border-t border-gray-100 pt-6 text-center">
-            <button onclick="reiniciarApp()" class="group flex items-center justify-center gap-2 mx-auto text-[10px] text-rose-300 font-black uppercase tracking-widest hover:text-rose-500 transition mb-4">
-                🗑️ Borrar Todo y Reiniciar Día
-            </button>
-            <p class="text-[9px] text-gray-300 font-bold italic tracking-tighter">© 2026 VIBRAS POSITIVAS. TODOS LOS DERECHOS RESERVADOS.</p>
+        <div class="border-t pt-6 text-center">
+            <button onclick="reiniciarApp()" class="text-[10px] text-rose-300 font-black uppercase mb-4">🗑️ Reiniciar Todo</button>
         </div>
     </div>
 
     <script>
         const WHATSAPP_SOPORTE = "573117700431";
-        
-        // Persistencia de datos
-        let storage = JSON.parse(localStorage.getItem('finanzas_bebe_vfinal')) || { 
+        let storage = JSON.parse(localStorage.getItem('finanzas_v4')) || { 
             saldoInicial: 0, 
             movimientos: [], 
             fechaInstalacion: new Date().getTime(),
             ultimaRenovacion: null 
         };
 
-        // --- SISTEMA DE SUSCRIPCIÓN ---
         function verificarSuscripcion() {
             const ahora = new Date().getTime();
-            const diasDesdeInstalacion = (ahora - storage.fechaInstalacion) / (1000 * 60 * 60 * 24);
-            
-            // Bloqueo tras 15 días iniciales
-            if (diasDesdeInstalacion > 15 && !storage.ultimaRenovacion) {
-                bloquear();
-            }
-            
-            // Bloqueo tras 30 días de la última renovación
-            if (storage.ultimaRenovacion) {
-                const diasDesdeRenovacion = (ahora - storage.ultimaRenovacion) / (1000 * 60 * 60 * 24);
-                if (diasDesdeRenovacion > 30) {
-                    bloquear();
-                }
-            }
+            const dias = (ahora - storage.fechaInstalacion) / (1000 * 60 * 60 * 24);
+            if (dias > 15 && !storage.ultimaRenovacion) document.getElementById('paywall').classList.add('active');
         }
 
-        function bloquear() {
-            document.getElementById('paywall').classList.add('active');
-            document.getElementById('appContent').classList.add('opacity-10', 'pointer-events-none');
-        }
-
-        function contactarSoporte() {
-            const msj = "Hola Vibras Positivas, quiero activar mi suscripción de 1 DÓLAR para la app Finanzas para Bebé.";
-            window.open(`https://wa.me/${WHATSAPP_SOPORTE}?text=${encodeURIComponent(msj)}`, '_blank');
-        }
-
-        // --- LÓGICA FINANCIERA ---
         function actualizarReloj() {
             const ahora = new Date();
-            const opciones = { timeZone: 'America/Bogota', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true };
-            document.getElementById('fechaHora').innerHTML = ahora.toLocaleDateString('es-CO') + '<br
+            document.getElementById('fechaHora').innerHTML = ahora.toLocaleDateString('es-CO') + '<br>' + ahora.toLocaleTimeString('es-CO', {hour12:true, hour:'2-digit', minute:'2-digit'});
+        }
+        setInterval(actualizarReloj, 1000);
+
+        function actualizarVista() {
+            const lista = document.getElementById('listaMovimientos');
+            const saldoElement = document.getElementById('saldoActual');
+            const setupDiv = document.getElementById('setupSaldo');
+            
+            // Mostrar/Ocultar Saldo Inicial
+            setupDiv.style.display = (storage.saldoInicial === 0 && storage.movimientos.length === 0) ? 'block' : 'none';
+
+            lista.innerHTML = '';
+            let balanceHaciaArriba = parseFloat(storage.saldoInicial);
+
+            // Generar la lista y calcular el total real
+            storage.movimientos.forEach((m) => {
+                if(m.tipo === 'INGRESO') balanceHaciaArriba += m.monto;
+                else balanceHaciaArriba -= m.monto;
+
+                lista.innerHTML = `
+                    <div class="flex justify-between items-center bg-white p-4 rounded-2xl border border-gray-100 border-l-4 ${m.tipo === 'INGRESO' ? 'border-emerald-400' : 'border-rose-400'}">
+                        <div>
+                            <p class="text-sm font-bold text-gray-700">${m.concepto}</p>
+                            <p class="text-[9px] text-gray-400">${m.hora}</p>
+                        </div>
+                        <span class="font-black ${m.tipo === 'INGRESO' ? 'text-emerald-600' : 'text-rose-600'}">
+                            ${m.tipo === 'INGRESO' ? '+' : '-'}$${m.monto.toLocaleString()}
+                        </span>
+                    </div>` + lista.innerHTML;
+            });
+
+            // Si hay saldo inicial, mostrarlo al final de la lista
+            if(storage.saldoInicial > 0) {
+                lista.innerHTML += `<div class="p-3 bg-indigo-50 rounded-xl text-center text-[10px] font-bold text-indigo-400 uppercase italic">Capital Inicial: $${storage.saldoInicial.toLocaleString()}</div>`;
+            }
+
+            saldoElement.innerText = `$${balanceHaciaArriba.toLocaleString()}`;
+            localStorage.setItem('finanzas_v4', JSON.stringify(storage));
+        }
+
+        function fijarSaldoInicial() {
+            const val = document.getElementById('saldoInput').value;
+            if(val) { storage.saldoInicial = parseFloat(val); document.getElementById('saldoInput').value=''; actualizarVista(); }
+        }
+
+        function registrar(tipo) {
+            const m = document.getElementById('monto').value;
+            const c = document.getElementById('concepto').value;
+            const h = new Date().toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit', hour12: true });
+
+            if(m && c) {
+                storage.movimientos.push({ monto: parseFloat(m), concepto: c.toUpperCase(), tipo, hora: h });
+                document.getElementById('monto').value = '';
+                document.getElementById('concepto').value = '';
+                actualizarVista();
+            }
+        }
+
+        function enviarWhatsApp() {
+            let b = parseFloat(storage.saldoInicial);
+            let txt = "📊 *FINANZAS PARA BEBÉ - VIBRAS POSITIVAS*%0A%0A";
+            txt += `💰 *INICIO:* $${b.toLocaleString()}%0A`;
+            storage.movimientos.forEach(m => {
+                b = (m.tipo === 'INGRESO') ? b + m.monto : b - m.monto;
+                txt += `${m.tipo === 'INGRESO' ? '✅' : '🔻'} ${m.concepto}: $${m.monto.toLocaleString()}%0A`;
+            });
+            txt += `%0A💵 *SALDO FINAL: $${b.toLocaleString()}*`;
+            window.open(`https://wa.me/${WHATSAPP_SOPORTE}?text=${txt}`, '_blank');
+        }
+
+        function reiniciarApp() {
+            if(confirm('¿Borrar todo?')) { storage.saldoInicial = 0; storage.movimientos = []; actualizarVista(); }
+        }
+
+        function contactarSoporte() { window.open(`https://wa.me/${WHATSAPP_SOPORTE}?text=Activar suscripción`, '_blank'); }
+
+        verificarSuscripcion();
+        actualizarReloj();
+        actualizarVista();
+    </script>
+</body>
+</html>
